@@ -18,17 +18,17 @@ namespace EisenhowerWebAPI.Controllers
         // HttpPost Mehtod -> Add new user
 
         [HttpPost]
-        public async Task<IActionResult> CreateUserAsync([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> CreateUserAsync([FromBody] UserRegisterDTO userDTO)
         {
             try
             {
                 if (userDTO == null) throw new ArgumentNullException(nameof(userDTO), "UserModel cannot be null");
 
                 string salt = userDTO.GenerateSalt();
-
                 string hash = userDTO.HashPassword(userDTO.Password, salt);
 
-                var newUser = new UserModel{
+                var newUser = new UserModel
+                {
                     Name = userDTO.Username,
                     Email = userDTO.Email,
                     PasswordSalt = salt,
@@ -36,9 +36,15 @@ namespace EisenhowerWebAPI.Controllers
                     Image = userDTO.Image
                 };
 
+                // Log the newUser object
+                Console.WriteLine($"Inserting user: {newUser}");
+
                 await _connectionContext.Users.InsertOneAsync(newUser);
 
-                return CreatedAtAction(nameof(GetOneUserAsync), new { id = newUser.Id }, newUser);
+                // Log after insertion
+                Console.WriteLine($"User inserted with ID: {newUser.Id}");
+
+                return Ok(newUser);
             }
             catch (ArgumentNullException ex)
             {
@@ -61,11 +67,12 @@ namespace EisenhowerWebAPI.Controllers
 
         [HttpGet("{id}")]
 
-        public async Task<ActionResult<UserModel>> GetOneUserAsync(ObjectId id)
+        public async Task<ActionResult<UserModel>> GetOneUserAsync(string id)
         {
             try
             {
-                var user = await _connectionContext.Users.Find(u => u.Id == id).SingleOrDefaultAsync() ?? throw new Exception($"User not found with id: {id}");
+                var userId = new ObjectId(id);
+                var user = await _connectionContext.Users.Find(u => u.Id == userId).SingleOrDefaultAsync() ?? throw new Exception($"User not found with id: {id}");
                 return Ok(user);
             }
             catch
