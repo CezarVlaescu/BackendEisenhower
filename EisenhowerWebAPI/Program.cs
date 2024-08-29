@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddSingleton<MongoConnectionContext>();
-builder.Services.AddSingleton<TokenGenerationService>();
+builder.Services.AddSingleton<TokenGenerationServices>();
 builder.Services.AddSingleton<PasswordServices>(); 
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>

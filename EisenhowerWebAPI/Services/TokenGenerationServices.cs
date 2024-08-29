@@ -5,12 +5,12 @@ using System.Text;
 
 namespace EisenhowerWebAPI.Services
 {
-    public class TokenGenerationService
+    public class TokenGenerationServices
     {
         private readonly IConfiguration _configuration;
         private readonly PasswordServices _passwordServices;
 
-        public TokenGenerationService(IConfiguration configuration, PasswordServices passwordServices)
+        public TokenGenerationServices(IConfiguration configuration, PasswordServices passwordServices)
         {
             _configuration = configuration;
             _passwordServices = passwordServices;

@@ -11,8 +11,8 @@ namespace EisenhowerWebAPI.Controllers
     public class LoginController : Controller
     {
         private readonly MongoConnectionContext _connectionContext;
-        private readonly TokenGenerationService _tokenGenerationService;
-        public LoginController(MongoConnectionContext connectionContext, TokenGenerationService tokenGenerationService)
+        private readonly TokenGenerationServices _tokenGenerationService;
+        public LoginController(MongoConnectionContext connectionContext, TokenGenerationServices tokenGenerationService)
         {
             _connectionContext = connectionContext;
             _tokenGenerationService = tokenGenerationService;
