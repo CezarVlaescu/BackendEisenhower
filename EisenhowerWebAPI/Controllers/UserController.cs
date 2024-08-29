@@ -1,6 +1,7 @@
 ﻿using EisenhowerWebAPI.Dto;
 using EisenhowerWebAPI.Models;
 using EisenhowerWebAPI.MongoContext;
+using EisenhowerWebAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -12,8 +13,13 @@ namespace EisenhowerWebAPI.Controllers
     public class UserController : Controller
     {
         private readonly MongoConnectionContext _connectionContext;
+        private readonly PasswordServices _passwordServices;
 
-        public UserController(MongoConnectionContext connectionContext) => _connectionContext = connectionContext;
+        public UserController(MongoConnectionContext connectionContext, PasswordServices passwordService)
+        {
+            _connectionContext = connectionContext;
+            _passwordServices = passwordService;
+        }
 
         // HttpPost Mehtod -> Add new user
 
@@ -24,8 +30,8 @@ namespace EisenhowerWebAPI.Controllers
             {
                 if (userDTO == null) throw new ArgumentNullException(nameof(userDTO), "UserModel cannot be null");
 
-                string salt = userDTO.GenerateSalt();
-                string hash = userDTO.HashPassword(userDTO.Password, salt);
+                string salt = _passwordServices.GenerateSalt();
+                string hash = _passwordServices.HashPassword(userDTO.Password, salt);
 
                 var newUser = new UserModel
                 {
@@ -36,13 +42,7 @@ namespace EisenhowerWebAPI.Controllers
                     Image = userDTO.Image
                 };
 
-                // Log the newUser object
-                Console.WriteLine($"Inserting user: {newUser}");
-
                 await _connectionContext.Users.InsertOneAsync(newUser);
-
-                // Log after insertion
-                Console.WriteLine($"User inserted with ID: {newUser.Id}");
 
                 return Ok(newUser);
             }

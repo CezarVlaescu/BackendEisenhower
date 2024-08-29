@@ -43,3 +43,11 @@ C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\obj\Debug\net6.0\r
 C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\obj\Debug\net6.0\EisenhowerWebAPI.pdb
 C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\obj\Debug\net6.0\EisenhowerWebAPI.genruntimeconfig.cache
 C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\obj\Debug\net6.0\ref\EisenhowerWebAPI.dll
+C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
