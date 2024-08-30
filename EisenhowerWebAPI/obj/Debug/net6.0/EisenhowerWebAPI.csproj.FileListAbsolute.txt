@@ -51,3 +51,4 @@ C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\M
 C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Newtonsoft.Json.dll

@@ -62,31 +62,46 @@ namespace EisenhowerWebAPI.Controllers
         }
 
         [HttpPut("{userId}/{taskId}")]
-        public async Task<ActionResult<TaskModelDto>> UpdateTask(string userId, string taskId, ETaskType type, [FromBody] TaskModelDto updatedTask)
+        public async Task<ActionResult<string>> UpdateTask(string userId, string taskId, ETaskType type, [FromBody] TaskModelDto updatedTask)
         {
             try
             {
                 var objectId = new ObjectId(userId);
-                var user = await _connectionContext.Users.Find(u => u.Id == objectId).SingleOrDefaultAsync() ?? throw new Exception($"User not found with id: {objectId}");
+                var user = await _connectionContext.Users.Find(u => u.Id == objectId).SingleOrDefaultAsync()
+                          ?? throw new Exception($"User not found with id: {objectId}");
 
                 var taskList = _taskServices.GetListBasedOnType(type, user.Tasks.DoTasks, user.Tasks.DecideTasks, user.Tasks.DelegateTasks, user.Tasks.DeleteTasks);
 
-                var taskToUpdate = taskList.Find(item => item.Id == taskId) ?? throw new Exception($"Task not found");
+                var taskToUpdate = taskList.Find(item => item.Id == taskId)
+                                    ?? throw new Exception($"Task not found with id: {taskId}");
 
                 taskList.Remove(taskToUpdate);
-                taskList.Add(updatedTask);
 
-                _taskServices.SortTasks(taskList);
+                taskToUpdate.Name = updatedTask.Name;
+                taskToUpdate.Hour = updatedTask.Hour;
+                taskToUpdate.IsCommented = updatedTask.IsCommented;
+                taskToUpdate.Comments = updatedTask.Comments;
+
+                if (updatedTask.Type != type)
+                {
+                    var rightList = _taskServices.GetListBasedOnType(updatedTask.Type, user.Tasks.DoTasks, user.Tasks.DecideTasks, user.Tasks.DelegateTasks, user.Tasks.DeleteTasks);
+                    rightList.Add(taskToUpdate);
+                    _taskServices.SortTasks(rightList);
+                }
+                else
+                {
+                    taskList.Add(taskToUpdate);
+                    _taskServices.SortTasks(taskList);
+                }
 
                 await _connectionContext.Users.ReplaceOneAsync(u => u.Id == objectId, user);
 
-                return Ok("Task updated successfull");
-
+                return Ok("Task updated successfully");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error updating task: {ex.Message}");
-                return StatusCode(500, "Problem updating the task");
+                return StatusCode(500, $"Problem updating the task: {ex.Message}");
             }
         }
 

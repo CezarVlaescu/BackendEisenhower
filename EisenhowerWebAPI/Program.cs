@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<MongoConnectionContext>();
 builder.Services.AddSingleton<TokenGenerationServices>();
+builder.Services.AddSingleton<TasksServices>();
 builder.Services.AddSingleton<PasswordServices>(); 
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
