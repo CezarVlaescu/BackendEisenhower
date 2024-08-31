@@ -30,7 +30,9 @@ namespace EisenhowerWebAPI.Controllers
 
                 if (!isValidPassword) return Unauthorized("Invalid password");
 
-                var token = _tokenGenerationService.GenerateToken(user.Email);
+                string userIdString = user.Id.ToString();
+
+                var token = _tokenGenerationService.GenerateToken(user.Email, userIdString);
                 return Ok(new LoginResponse { Token = token });
             }
             catch (Exception ex)

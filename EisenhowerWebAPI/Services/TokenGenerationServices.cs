@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -16,7 +17,7 @@ namespace EisenhowerWebAPI.Services
             _passwordServices = passwordServices;
         }
 
-        public string GenerateToken(string email)
+        public string GenerateToken(string email, string userId)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
@@ -24,6 +25,7 @@ namespace EisenhowerWebAPI.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
+                    new Claim("UserId", userId),
                     new Claim(ClaimTypes.Email, email),
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),

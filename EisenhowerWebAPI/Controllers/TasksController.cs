@@ -30,7 +30,17 @@ namespace EisenhowerWebAPI.Controllers
 
                 var taskList = _taskServices.GetListBasedOnType(taskModelDto.Type, user.Tasks.DoTasks, user.Tasks.DecideTasks, user.Tasks.DelegateTasks, user.Tasks.DeleteTasks);
 
-                taskList.Add(taskModelDto);
+                var newTask = new TaskModelDto
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Name = taskModelDto.Name,
+                    Hour = taskModelDto.Hour,
+                    Type = taskModelDto.Type,
+                    IsCommented = taskModelDto.IsCommented,
+                    Comments = taskModelDto.Comments
+                };
+
+                taskList.Add(newTask);
                 _taskServices.SortTasks(taskList);
 
                 await _connectionContext.Users.ReplaceOneAsync(u => u.Id == objectId, user);
