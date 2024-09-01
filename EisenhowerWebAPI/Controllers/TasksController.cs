@@ -45,7 +45,7 @@ namespace EisenhowerWebAPI.Controllers
 
                 await _connectionContext.Users.ReplaceOneAsync(u => u.Id == objectId, user);
 
-                return Ok("Task created successfull");
+                return Ok(new { message = "Task created successfully" });
             }
             catch (Exception ex)
             {
