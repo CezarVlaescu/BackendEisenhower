@@ -1,6 +1,9 @@
 using EisenhowerWebAPI.MongoContext;
 using EisenhowerWebAPI.Services;
+using Hangfire;
+using Hangfire.Mongo;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -13,6 +16,9 @@ builder.Services.AddSingleton<TokenGenerationServices>();
 builder.Services.AddSingleton<TasksServices>();
 builder.Services.AddSingleton<PasswordServices>(); 
 builder.Services.AddControllers();
+
+builder.Services.AddHostedService<CleanupHostedService>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
@@ -55,9 +61,9 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowSpecificOrigin");
 
-app.UseAuthorization();
-
 app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapControllers();
 

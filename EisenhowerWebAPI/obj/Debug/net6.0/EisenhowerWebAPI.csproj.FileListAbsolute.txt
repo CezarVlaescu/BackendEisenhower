@@ -52,3 +52,8 @@ C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\M
 C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Hangfire.AspNetCore.dll
+C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Hangfire.Core.dll
+C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Hangfire.NetCore.dll
+C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Hangfire.SqlServer.dll
+C:\Users\vlaes\source\repos\EisenhowerWebAPI\EisenhowerWebAPI\bin\Debug\net6.0\Hangfire.Mongo.dll
