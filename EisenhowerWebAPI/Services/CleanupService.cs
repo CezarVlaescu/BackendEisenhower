@@ -1,60 +1,67 @@
-﻿using EisenhowerWebAPI.Dto;
-using EisenhowerWebAPI.Models;
+﻿using EisenhowerWebAPI.Models;
 using EisenhowerWebAPI.MongoContext;
+using Microsoft.AspNetCore.Connections;
 using MongoDB.Driver;
 
-public class CleanupHostedService : IHostedService, IDisposable
+namespace EisenhowerWebAPI.Services
 {
-    private Timer _timer;
-    private readonly ILogger<CleanupHostedService> _logger;
-    private readonly MongoConnectionContext _context;
-
-    public CleanupHostedService(ILogger<CleanupHostedService> logger, MongoConnectionContext context)
+    public interface ICleanUpService
     {
-        _logger = logger;
-        _context = context;
+        Task CleanUp(TasksPoolModel taskPool); 
     }
-
-    public Task StartAsync(CancellationToken cancellationToken)
+    public class CleanUpService : ICleanUpService
     {
-        _logger.LogInformation("Cleanup Hosted Service running.");
-
-        // Setează timer-ul să verifice la fiecare oră
-        _timer = new Timer(DoCleanup, null, TimeSpan.Zero, TimeSpan.FromHours(1));
-
-        return Task.CompletedTask;
-    }
-
-    private async void DoCleanup(object state)
-    {
-        var now = DateTime.UtcNow;
-
-        // Verifică dacă este 12 noaptea
-        if (now.Hour == 0 && now.Minute == 0)
+        public Task CleanUp(TasksPoolModel taskPool)
         {
-            _logger.LogInformation("Cleaning up tasks...");
-            await _context.Users.UpdateManyAsync(
-                FilterDefinition<UserModel>.Empty,
-                Builders<UserModel>.Update
-                    .Set(u => u.Tasks.DoTasks, new List<TaskModelDto>())
-                    .Set(u => u.Tasks.DecideTasks, new List<TaskModelDto>())
-                    .Set(u => u.Tasks.DelegateTasks, new List<TaskModelDto>())
-                    .Set(u => u.Tasks.DeleteTasks, new List<TaskModelDto>())
-            );
+            taskPool.DoTasks.Clear();
+            taskPool.DecideTasks.Clear();
+            taskPool.DelegateTasks.Clear();
+            taskPool.DeleteTasks.Clear();
+
+            return Task.CompletedTask;
         }
     }
 
-    public Task StopAsync(CancellationToken cancellationToken)
+    public class ScheduleCleanUpService : IDisposable, IHostedService
     {
-        _logger.LogInformation("Cleanup Hosted Service is stopping.");
+        private Timer _timer;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        _timer?.Change(Timeout.Infinite, 0);
+        public ScheduleCleanUpService(IServiceScopeFactory scopeFactory) => _scopeFactory = scopeFactory;
 
-        return Task.CompletedTask;
-    }
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
 
-    public void Dispose()
-    {
-        _timer?.Dispose();
+            var midnight = DateTime.UtcNow.Date.AddDays(1).AddHours(0);
+            var timeUntilMidnight = midnight - DateTime.UtcNow;
+            _timer = new Timer(DoWork, null, timeUntilMidnight, TimeSpan.FromDays(1));
+
+            return Task.CompletedTask;
+        }
+
+        private async void DoWork(object state)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var cleanUpService = scope.ServiceProvider.GetRequiredService<ICleanUpService>();
+            var connectionContext = scope.ServiceProvider.GetRequiredService<MongoConnectionContext>();
+
+            var users = await connectionContext.Users.Find(_ => true).ToListAsync();
+
+            foreach (var user in users)
+            {
+                await cleanUpService.CleanUp(user.Tasks);
+            }
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            _timer.Change(Timeout.Infinite, 0);
+            return Task.CompletedTask;
+        }
+
+        public void Dispose() => _timer?.Dispose();
     }
 }

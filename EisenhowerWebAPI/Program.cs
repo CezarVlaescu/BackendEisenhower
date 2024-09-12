@@ -1,9 +1,6 @@
 using EisenhowerWebAPI.MongoContext;
 using EisenhowerWebAPI.Services;
-using Hangfire;
-using Hangfire.Mongo;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -15,9 +12,9 @@ builder.Services.AddSingleton<MongoConnectionContext>();
 builder.Services.AddSingleton<TokenGenerationServices>();
 builder.Services.AddSingleton<TasksServices>();
 builder.Services.AddSingleton<PasswordServices>(); 
+builder.Services.AddSingleton<ICleanUpService, CleanUpService>();
+builder.Services.AddHostedService<ScheduleCleanUpService>();
 builder.Services.AddControllers();
-
-builder.Services.AddHostedService<CleanupHostedService>();
 
 builder.Services.AddCors(options =>
 {
